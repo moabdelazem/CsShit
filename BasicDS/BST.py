@@ -1,86 +1,91 @@
-# TreeNode Structure
 class Node:
     def __init__(self, data):
         self.data = data
-        self.left = None
-        self.right = None
+        self.leftNode = None
+        self.rightNode = None
 
-# Binary Search Tree Structure
+# Node & Parent Class
+class NodeAndParent:
+    def __init__(self, node=None, parent=None, isLeft=None):
+        self.node = node
+        self.parent = parent
+        self.isLeft = isLeft
+
+# Binary Search Tree Structure 
 class BinarySearchTree:
     def __init__(self):
-        self.root = None
+        self.rootNode = None
     
-    # Insert Node Iterative Approach
+    # Insert Node In Binary Tree {Iterative Approach}
     def insertNode(self, data):
         newNode = Node(data)
 
-        if self.root is None:
-            self.root = newNode
-            return
-
-        currentNode = self.root
+        if self.rootNode is None:
+            self.rootNode = newNode
+            return 
+        
+        currentNode = self.rootNode
         while currentNode:
-            if data > currentNode.data:
-                if currentNode.left is None:
-                    currentNode.left = newNode
+            if currentNode.data < data:
+                if currentNode.leftNode is None:
+                    currentNode.leftNode = newNode
                     break
                 else:
-                    currentNode = currentNode.left
+                    currentNode = currentNode.leftNode
             else:
-                if currentNode.right is None:
-                    currentNode.right = newNode
+                if currentNode.rightNode is None:
+                    currentNode.rightNode = newNode
                     break
                 else:
-                    currentNode = currentNode.right
-
-    # Find Node Iterative Approach
+                    currentNode = currentNode.rightNode
+            
+    # Find Specific Node {Iterative Approach}
     def findNode(self, nodeData):
-        currentNode = self.root
+        currentNode = self.rootNode
 
         while currentNode:
-            if nodeData == currentNode.data:
+            if currentNode.data == nodeData:
                 return currentNode
-            elif nodeData < currentNode.data:
-                currentNode = currentNode.left
+            elif currentNode.data > nodeData:
+                currentNode = currentNode.leftNode
             else:
-                currentNode = currentNode.right
-        return None 
+                currentNode = currentNode.rightNode
+        return None
 
-    # Display Binary Search Tree (In-order Traversal) {Left -> Node -> Right}
-    def IndisplayTree(self, node):
-        if node is not None:
-            self.IndisplayTree(node.left)
-            print(node.data, end=" ")
-            self.IndisplayTree(node.right)
+    # Find Node And Parent
+    def findNodeAndParent(self, nodeData):
+        currentNode = self.rootNode
+        parentNode = None
+        isLeft = None
+        nodeAndParentInfo = None
 
-    # Display Binary Search Tree (Pre-Order Traversal) (Node -> Left -> Right)
-    def PredisplayTree(self, node):
-        if node is not None:
-            print(node.data, end=" ")
-            self.PredisplayTree(node.left)
-            self.PredisplayTree(node.right)
+        while currentNode:
+            if currentNode.data == nodeData:
+                nodeAndParentInfo = NodeAndParent(currentNode, parentNode, isLeft)
+                break
+            elif currentNode.data > nodeData:
+                parentNode = currentNode
+                isLeft = True
+                currentNode = currentNode.leftNode
+            else:
+                parentNode = currentNode
+                isLeft = False
+                currentNode = currentNode.rightNode
+        return nodeAndParentInfo
 
-    # Display Binary Search Tree (Post-Order Traversal) (Left -> Right -> Node)
-    def PostdisplayTree(self, node):
-        if node is not None:
-            self.PostdisplayTree(node.left)
-            self.PostdisplayTree(node.right)
-            print(node.data, end=" ")
+    # Order Traversals
+    """ 
+        PreOrder    =>> Node -> Left -> Right
+        InOrder     =>> Left -> Node -> Right
+        PostOrder   =>> Left -> Right -> Node
+    """
+    def InOrder(self):
+        self.internalInOrder(self.rootNode)
 
-fuckingTree = BinarySearchTree()
-fuckingTree.insertNode(1)
-fuckingTree.insertNode(2)
-fuckingTree.insertNode(3)
-fuckingTree.insertNode(4)
-fuckingTree.insertNode(5)
-fuckingTree.insertNode(6)
-fuckingTree.insertNode(7)
-fuckingTree.insertNode(8)
-fuckingTree.insertNode(9)
+    def internalInOrder(self, node):
+        if node is not None:            
+            self.internalInOrder(node.leftNode)
+            print(node.data, " -> ", end=' ')
+            self.internalInOrder(node.rightNode)
 
-# print(fuckingTree.root.data)
-fuckingTree.IndisplayTree(fuckingTree.root)
-fuckingTree.PredisplayTree(fuckingTree.root)
-fuckingTree.PostdisplayTree(fuckingTree.root)
-
-
+    
